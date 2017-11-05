@@ -11,6 +11,7 @@ Balance::Balance(double pInit, double iInit, double dInit, int desiredVal) {
   timeInstance = 0;
   //error
   error = 0;
+  errorSum = 0;
 };
 int Balance::UpdatePID(int sensorVal) { //time is in millis, need to change so it is float/double in seconds
   //stuff that gets looped
@@ -32,4 +33,3 @@ int Balance::UpdatePID(int sensorVal) { //time is in millis, need to change so i
   }
   return outVal;
 };
-
