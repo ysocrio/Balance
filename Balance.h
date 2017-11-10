@@ -28,5 +28,7 @@ class Balance
   public:
     Balance(double pInit, double iInit, double dInit, int desiredVal);
     int UpdatePID(int sensorVal);
+    void SetPID(int pSet, int iSet, int dSet);
+    void SetDesiredVal(int desiredVal);
 };
 #endif

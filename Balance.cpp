@@ -35,3 +35,13 @@ int Balance::UpdatePID(int sensorVal) { //time is in millis, need to change so i
   }
   return outVal;
 };
+
+void Balance::SetPID(int pSet, int iSet, int dSet){
+  pVal = pSet;
+  iVal = iSet;
+  dVal = dSet;
+};
+
+void Balance::SetDesiredVal(int desiredVal){
+  setpoint = desiredVal;
+};
