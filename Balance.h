@@ -30,5 +30,8 @@ class Balance
     int UpdatePID(int sensorVal);
     void SetPID(int pSet, int iSet, int dSet);
     void SetDesiredVal(int desiredVal);
+    void ServosInitialize();
+    void SetFrame();
+    void SetSpeeds();
 };
 #endif

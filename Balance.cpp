@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "Balance.h"
+//dynamexl includes need to be written in here
 
 Balance::Balance(double pInit, double iInit, double dInit, int desiredVal) {
   //initialize the object
@@ -15,6 +16,13 @@ Balance::Balance(double pInit, double iInit, double dInit, int desiredVal) {
   //value
   setpoint = desiredVal;
 };
+
+/*changes*
+1.Change PID values to doubles
+2.change time so it is in seconds instead of milliseconds
+3.after these two make sure data types agree
+
+*/
 int Balance::UpdatePID(int sensorVal) { //time is in millis, need to change so it is float/double in seconds
   //stuff that gets looped
   int previousTime = timeInstance;
@@ -44,4 +52,19 @@ void Balance::SetPID(int pSet, int iSet, int dSet){
 
 void Balance::SetDesiredVal(int desiredVal){
   setpoint = desiredVal;
+};
+
+//function that is called to initialize all the dynamexl motors
+void Balance::ServosInitialize(){
+
+};
+
+//function that allows all motor positions (not wheel motors) to a specific orientation
+void Balance::SetFrame(){
+
+};
+
+//sets the speed of the two motors attached to the wheels
+void Balance::SetSpeeds(){
+
 };
