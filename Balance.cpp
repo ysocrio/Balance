@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "Balance.h"
+#include "ax12.h"
 //dynamexl includes need to be written in here
 //Test cmo
 
@@ -62,7 +63,14 @@ void Balance::ServosInitialize(){
 
 //function that allows all motor positions (not wheel motors) to a specific orientation
 void Balance::SetFrame(){
-
+  // Standing - Set all 16 joint servos to center position
+  // 0 -> 0 degrees, 512 -> 150 degree, 1023 -> 300 degree (max)
+  int numServos = 16;             // 16 total joint servos
+  for(int i = 0; i < numServos; i+2) {
+    dxlSetGoalPosition(i, 512);   // 512 -> 150 degree, center position
+    dxlSetGoalPosition(i+1, 512); // Move 2 at once
+    delay(20);                    // Wait for servos to move
+  }
 };
 
 //sets the speed of the two motors attached to the wheels
