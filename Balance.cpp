@@ -87,3 +87,16 @@ void Balance::SetFrame(){
 void Balance::SetSpeeds(){
 
 };
+
+Sensor::Sensor(){
+};
+
+void Sensor::Connect()
+{
+
+};
+
+double Sensor::GetPitchAngle()
+{
+  
+};
