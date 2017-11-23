@@ -21,6 +21,16 @@
 #define MPU_ACCEL_ZOUT_L 0x40
 #define CLEAR 0
 
+struct orientationVals {
+  int accelX;
+  int accelY;
+  int accelZ;
+  int temp;
+  int gyroX;
+  int gyroY;
+  int gyroZ;
+};
+
 class Balance
 {
   private:
@@ -51,10 +61,11 @@ class Sensor
   private:
       int updatePeriod;
       unsigned long lastTimeInstance;
-      int accelX,accelY,accelZ,temp,gyroX,gyroY,gyroZ;
+      orientationVals sensorVals;
   public:
     Sensor();
     void Connect();
+    void update();
     double GetPitchAngle();
 };
 #endif
