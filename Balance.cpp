@@ -65,12 +65,22 @@ void Balance::ServosInitialize(){
 void Balance::SetFrame(){
   // Standing - Set all 16 joint servos to center position
   // 0 -> 0 degrees, 512 -> 150 degree, 1023 -> 300 degree (max)
-  int numServos = 16;             // 16 total joint servos
-  for(int i = 0; i < numServos; i+2) {
-    dxlSetGoalPosition(i, 512);   // 512 -> 150 degree, center position
-    dxlSetGoalPosition(i+1, 512); // Move 2 at once
-    delay(20);                    // Wait for servos to move
-  }
+    dxlSetGoalPosition(1, 512);   // Servo #1
+    dxlSetGoalPosition(2, 512);
+    dxlSetGoalPosition(3, 512);
+    dxlSetGoalPosition(4, 512);
+    dxlSetGoalPosition(5, 512);
+    dxlSetGoalPosition(6, 512);
+    dxlSetGoalPosition(7, 512);
+    dxlSetGoalPosition(8, 512);
+    dxlSetGoalPosition(9, 512);
+    dxlSetGoalPosition(10, 512);
+    dxlSetGoalPosition(11, 512);
+    dxlSetGoalPosition(12, 512);
+    dxlSetGoalPosition(13, 512);
+    dxlSetGoalPosition(14, 512);
+    dxlSetGoalPosition(15, 512);
+    dxlSetGoalPosition(16, 512);  // Servo #16
 };
 
 //sets the speed of the two motors attached to the wheels
