@@ -89,14 +89,46 @@ void Balance::SetSpeeds(){
 };
 
 Sensor::Sensor(){
+  updatePeriod = 500; //in ms, checks sensor board twice every second
+  lastTimeInstance = millis();
 };
 
-void Sensor::Connect()
+void Sensor::Connect()    //called in setup to connect to IMU6050
 {
-
+  Wire.begin();
+  Wire.beginTransmission(MPU_addr);
+  Wire.write(MPU_PWR_MGMT_1);
+  Wire.write(CLEAR);
+  //sets MPU_PWR_MGMT_1 to zero, brings the sensor out of sleep mode
+  Wire.endTransmission(true);
+  //Wire.write moves data into a buffer, endtransmission sends data
+  //if argument is parameter is true, connection is ended afterwards, if false
+  //then connection will keep connection activ
 };
 
+//method to return last sensor reading
+//when time from last sensor reading is greater than updatePeriod,
+//sensor values are updated
 double Sensor::GetPitchAngle()
 {
-  
+  signed long currentTime = millis();
+  int timeDifference = int(currentTime - lastTimeInstance);
+  if(timeDifference >= updatePeriod);
+  {
+    Wire.beginTransmission(MPU_addr);
+    Wire.write(MPU_ACCEL_XOUT_H); //starting register to already
+    Wire.endTransmission(false);
+    Wire.requestFrom(MPU_addr, 14, true)//requests 14 registers
+
+    accelX = (Wire.read()<<8)|(Wire.read());
+    //first read is highest 8 bits, so we shift that, then OR with lowest 8 bits
+    accelY = (Wire.read()<<8)|(Wire.read());
+    accelZ = (Wire.read()<<8)|(Wire.read());
+    temp = (Wire.read()<<8)|(Wire.read());
+    gyroX = (Wire.read()<<8)|(Wire.read());
+    gyroY = (Wire.read()<<8)|(Wire.read());
+    gyroZ = (Wire.read()<<8)|(Wire.read());
+
+    lastTimeInstance = millis();
+  }
 };
