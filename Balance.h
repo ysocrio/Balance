@@ -65,7 +65,7 @@ class Sensor
   public:
     Sensor();
     void Connect();
-    void update();
+    void Update();
     double GetPitchAngle();
 };
 #endif

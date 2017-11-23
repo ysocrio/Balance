@@ -118,7 +118,7 @@ void Sensor::Update()
     Wire.beginTransmission(MPU_addr);
     Wire.write(MPU_ACCEL_XOUT_H); //starting register to already
     Wire.endTransmission(false);
-    Wire.requestFrom(MPU_addr, 14, true)//requests 14 registers
+    Wire.requestFrom(MPU_addr, 14, true);//requests 14 registers
 
     sensorVals.accelX = (Wire.read()<<8)|(Wire.read());
     //first read is highest 8 bits, so we shift that, then OR with lowest 8 bits
