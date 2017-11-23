@@ -34,4 +34,12 @@ class Balance
     void SetFrame();
     void SetSpeeds();
 };
+class Sensor
+{
+  private:
+  public:
+    Sensor();
+    void Connect();
+    double GetPitchAngle();
+};
 #endif
