@@ -89,7 +89,7 @@ void Balance::SetSpeeds(){
 };
 
 Sensor::Sensor(){
-  updatePeriod = 500; //in ms, checks sensor board twice every second
+  updatePeriod = 100; //in ms, checks sensor board twice every second
   lastTimeInstance = millis();
 };
 
