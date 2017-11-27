@@ -62,26 +62,17 @@ void Balance::ServosInitialize(){
 };
 
 //function that allows all motor positions (not wheel motors) to a specific orientation
-void Balance::SetFrame(){
-  // Standing - Set all 16 joint servos to center position
-  // 0 -> 0 degrees, 512 -> 150 degree, 1023 -> 300 degree (max)
-    dxlSetGoalPosition(1, 512);   // Servo #1
-    dxlSetGoalPosition(2, 512);
-    dxlSetGoalPosition(3, 512);
-    dxlSetGoalPosition(4, 512);
-    dxlSetGoalPosition(5, 512);
-    dxlSetGoalPosition(6, 512);
-    dxlSetGoalPosition(7, 512);
-    dxlSetGoalPosition(8, 512);
-    dxlSetGoalPosition(9, 512);
-    dxlSetGoalPosition(10, 512);
-    dxlSetGoalPosition(11, 512);
-    dxlSetGoalPosition(12, 512);
-    dxlSetGoalPosition(13, 512);
-    dxlSetGoalPosition(14, 512);
-    dxlSetGoalPosition(15, 512);
-    dxlSetGoalPosition(16, 512);  // Servo #16
-};
+void Balance::SetFrame(int goalPosition[16])
+{
+  for(int i = 1; i <= 16; i++) {
+    /***************************
+    * AX Position graphic http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
+    *   EXAMPLE: set servo #1 position to 512
+    *     dxlSetGoalPosition(1,512);
+    ****************************/
+    dxlSetGoalPosition(i, goalPosition[i-1]);
+  }
+}
 
 //sets the speed of the two motors attached to the wheels
 void Balance::SetSpeeds(){
