@@ -19,6 +19,13 @@
 #define MPU_ACCEL_YOUT_L 0x3E
 #define MPU_ACCEL_ZOUT_H 0x3F
 #define MPU_ACCEL_ZOUT_L 0x40
+#define AX12_CWLO 0X06
+#define AX12_CWHI 0X07
+#define AX12_CCWLO 0X08
+#define AX12_CCWJI 0x09
+#define SETLOW 0x00
+#define SETCCWLO 0XFF
+#define SETCCWHI 0X03
 #define CLEAR 0
 
 struct orientationVals {
