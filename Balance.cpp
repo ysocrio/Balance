@@ -57,8 +57,25 @@ void Balance::SetDesiredVal(int desiredVal){
 };
 
 //function that is called to initialize all the dynamexl motors
-void Balance::ServosInitialize(){
-
+void Balance::ServosInitialize(int goalPosition[16])
+{
+    for(int i=1; i<= 16; i++)
+    {
+       if(i<=14)
+       {
+         goalPosition(AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make joint mode
+         goalPosition(AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value
+         goalPosition(AX12_CCWLO,SETCCWLO);//Lowest byte of counterclockwise angle limit,@ initial value
+         goalPosition(AX12_CCWHI,SETCCWHI);//Highest byte of counterclockwise angle limit,@ initial value
+       }
+       if(i== 15 || i==16)
+       {
+         goalPosition(AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make wheel mode
+         goalPosition(AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value 
+         goalPosition(AX12_CCWLO,SETLOW);//Lowest byte of counterclockwise angle limit,@ initial value
+         goalPosition(AX12_CCWHI,SETLOW);//Highest byte of counterclockwise angle limit,@ initial value
+       }
+    }
 };
 
 //function that allows all motor positions (not wheel motors) to a specific orientation
