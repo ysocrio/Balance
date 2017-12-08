@@ -2,7 +2,6 @@
 #include "Balance.h"
 #include "ax12.h"
 //dynamexl includes need to be written in here
-//Test cmo
 
 Balance::Balance(double pInit, double iInit, double dInit, int desiredVal) {
   //initialize the object
@@ -71,7 +70,7 @@ void Balance::ServosInitialize(int goalPosition[16])
        if(i== 15 || i==16)
        {
          goalPosition(AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make wheel mode
-         goalPosition(AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value 
+         goalPosition(AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value
          goalPosition(AX12_CCWLO,SETLOW);//Lowest byte of counterclockwise angle limit,@ initial value
          goalPosition(AX12_CCWHI,SETLOW);//Highest byte of counterclockwise angle limit,@ initial value
        }
