@@ -61,7 +61,7 @@ class Balance
     void SetDesiredVal(int desiredVal);
     void ServosInitialize();
     void SetFrame();
-    void SetSpeeds();
+    void SetSpeeds(int goalSpeed1, int goalSpeed2);
 };
 class Sensor
 {
