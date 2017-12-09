@@ -91,9 +91,21 @@ void Balance::SetFrame(int goalPosition[16])
 }
 
 //sets the speed of the two motors attached to the wheels
-void Balance::SetSpeeds(){
-
-};
+void Balance::SetSpeeds(int goalSpeed1, int goalSpeed2){
+    /***************************
+    * AX Set Goal Speed http://learn.trossenrobotics.com/projects/181-arbotix-1-6-documentation.html
+    * Wheel mode; speed can be from 0 - 2047, with each increment being about .1% of total output for AX servos
+    * Values from 1024-2047 rotate the servo clockwise with 1024 being stopped and 2047 being full speed
+    * Essentially the 10nth bit becomes the direction control
+    ****************************/
+    setspeed=goalSpeed1;
+    for(int i=1; i<=16;i++){
+      if(dxlGetMode(i)==2){
+        dxlSetGoalSpeed(i,setspeed);
+        setspeed=goalSpeed2;
+      }
+    }
+}
 
 Sensor::Sensor(){
   updatePeriod = 100; //in ms, checks sensor board twice every second
