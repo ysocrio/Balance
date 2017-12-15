@@ -26,11 +26,11 @@ Balance::Balance(double pInit, double iInit, double dInit, int desiredVal) {
 */
 int Balance::UpdatePID(int sensorVal) { //time is in millis, need to change so it is float/double in seconds
   //stuff that gets looped
-  int previousTime = timeInstance;
+  unsigned long previousTime = timeInstance;
   int previousError = error;
   error = setpoint - sensorVal;
   timeInstance = millis();
-  int ellapsedTime = int(timeInstance - previousTime);   //(change of time)
+  double ellapsedTime = double((timeInstance - previousTime)/1000);   //(change of time)
   int errorChange = error - previousError;          //(change in error)
   //proportional term
   outVal = pVal * error;
