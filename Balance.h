@@ -22,7 +22,7 @@
 #define AX12_CWLO 0X06
 #define AX12_CWHI 0X07
 #define AX12_CCWLO 0X08
-#define AX12_CCWJI 0x09
+#define AX12_CCWHI 0x09
 #define SETLOW 0x00
 #define SETCCWLO 0XFF
 #define SETCCWHI 0X03
@@ -37,7 +37,6 @@ struct orientationVals {
   int gyroY;
   int gyroZ;
 };
-
 class Balance
 {
   private:
@@ -48,7 +47,7 @@ class Balance
     //desired value
     int setpoint;
     //output
-    int outVal;
+    double outVal;
     //time keeping
     unsigned long timeInstance;
     //error
@@ -60,8 +59,8 @@ class Balance
     void SetPID(int pSet, int iSet, int dSet);
     void SetDesiredVal(int desiredVal);
     void ServosInitialize();
-    void SetFrame();
-    void SetSpeeds(int goalSpeed1, int goalSpeed2);
+    void SetFrame(int goalPosition[16]);
+    void SetSpeeds(int goalSpeedL, int goalSpeedR);
 };
 class Sensor
 {
@@ -70,7 +69,7 @@ class Sensor
       unsigned long lastTimeInstance;
       orientationVals sensorVals;
   public:
-    Sensor();
+    Sensor(int updatePeriodSet);
     void Connect();
     void Update();
     double GetPitchAngle();

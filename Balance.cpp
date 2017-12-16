@@ -42,7 +42,7 @@ int Balance::UpdatePID(int sensorVal) { //time is in millis, need to change so i
     int derivE = errorChange / ellapsedTime;
     outVal += derivE * dVal;
   }
-  return outVal;
+  return int(outVal);
 };
 
 void Balance::SetPID(int pSet, int iSet, int dSet){
@@ -56,23 +56,23 @@ void Balance::SetDesiredVal(int desiredVal){
 };
 
 //function that is called to initialize all the dynamexl motors
-void Balance::ServosInitialize(int goalPosition[16])
+void Balance::ServosInitialize()
 {
-    for(int i=1; i<= 16; i++)
+    for(int servoID=1; servoID<= 16; servoID++)
     {
-       if(i<=14)
+       if(servoID<=14)
        {
-         goalPosition(AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make joint mode
-         goalPosition(AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value
-         goalPosition(AX12_CCWLO,SETCCWLO);//Lowest byte of counterclockwise angle limit,@ initial value
-         goalPosition(AX12_CCWHI,SETCCWHI);//Highest byte of counterclockwise angle limit,@ initial value
+         dxlSetRegister(servoID,AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make joint mode
+         dxlSetRegister(servoID,AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value
+         dxlSetRegister(servoID,AX12_CCWLO,SETCCWLO);//Lowest byte of counterclockwise angle limit,@ initial value
+         dxlSetRegister(servoID,AX12_CCWHI,SETCCWHI);//Highest byte of counterclockwise angle limit,@ initial value
        }
-       if(i== 15 || i==16)
+       if(servoID== 15 || servoID==16)
        {
-         goalPosition(AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make wheel mode
-         goalPosition(AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value
-         goalPosition(AX12_CCWLO,SETLOW);//Lowest byte of counterclockwise angle limit,@ initial value
-         goalPosition(AX12_CCWHI,SETLOW);//Highest byte of counterclockwise angle limit,@ initial value
+         dxlSetRegister(servoID,AX12_CWLO,SETLOW);//Lowest byte of clockwise angle limit,@ initial value to make wheel mode
+         dxlSetRegister(servoID,AX12_CWHI,SETLOW);//Highest byte of clockwise angle limit,@ initial value
+         dxlSetRegister(servoID,AX12_CCWLO,SETLOW);//Lowest byte of counterclockwise angle limit,@ initial value
+         dxlSetRegister(servoID,AX12_CCWHI,SETLOW);//Highest byte of counterclockwise angle limit,@ initial value
        }
     }
 };
@@ -91,24 +91,19 @@ void Balance::SetFrame(int goalPosition[16])
 }
 
 //sets the speed of the two motors attached to the wheels
-void Balance::SetSpeeds(int goalSpeed1, int goalSpeed2){
+void Balance::SetSpeeds(int goalSpeedL, int goalSpeedR){
     /***************************
     * AX Set Goal Speed http://learn.trossenrobotics.com/projects/181-arbotix-1-6-documentation.html
     * Wheel mode; speed can be from 0 - 2047, with each increment being about .1% of total output for AX servos
     * Values from 1024-2047 rotate the servo clockwise with 1024 being stopped and 2047 being full speed
     * Essentially the 10nth bit becomes the direction control
     ****************************/
-    setspeed=goalSpeed1;
-    for(int i=1; i<=16;i++){
-      if(dxlGetMode(i)==2){
-        dxlSetGoalSpeed(i,setspeed);
-        setspeed=goalSpeed2;
-      }
-    }
+        dxlSetGoalSpeed(15,goalSpeedL);
+        dxlSetGoalSpeed(16,goalSpeedR);
 }
 
-Sensor::Sensor(){
-  updatePeriod = 100; //in ms, checks sensor board twice every second
+Sensor::Sensor(int updatePeriodSet){
+  updatePeriod = updatePeriodSet; //in ms, checks sensor board twice every second
   lastTimeInstance = millis();
 };
 
@@ -122,7 +117,7 @@ void Sensor::Connect()    //called in setup to connect to IMU6050
   Wire.endTransmission(true);
   //Wire.write moves data into a buffer, endtransmission sends data
   //if argument is parameter is true, connection is ended afterwards, if false
-  //then connection will keep connection activ
+  //then connection will keep connection active
 };
 
 //method to return last sensor reading
@@ -132,7 +127,7 @@ void Sensor::Update()
 {
   signed long currentTime = millis();
   int timeDifference = int(currentTime - lastTimeInstance);
-  if(timeDifference >= updatePeriod);
+  if(timeDifference >= updatePeriod)
   {
     Wire.beginTransmission(MPU_addr);
     Wire.write(MPU_ACCEL_XOUT_H); //starting register to already
