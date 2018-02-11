@@ -6,19 +6,14 @@
 #ifndef Balance_h
 #define Balance_h
 //these two lines check if balance has already been instantiated
-#include "Arduino.h"
-//standard arduino data types
-#include <Wire.h>             //i2c library
 
-//definitions for all the MPU6050 used by class Sensor
-#define MPU_addr 0x68 //address of MPU6050
-#define MPU_PWR_MGMT_1 0x6B
-#define MPU_ACCEL_XOUT_H 0x3B
-#define MPU_ACCEL_XOUT_L 0x3C
-#define MPU_ACCEL_YOUT_H 0x3D
-#define MPU_ACCEL_YOUT_L 0x3E
-#define MPU_ACCEL_ZOUT_H 0x3F
-#define MPU_ACCEL_ZOUT_L 0x40
+#include "Arduino.h"
+#include "ax12.h"     //for dynamexl servos
+
+//standard arduino data types
+
+
+//definitions for AX12+
 #define AX12_CWLO 0X06
 #define AX12_CWHI 0X07
 #define AX12_CCWLO 0X08
@@ -27,16 +22,13 @@
 #define SETCCWLO 0XFF
 #define SETCCWHI 0X03
 #define CLEAR 0
+#define NUMBER_OF_SERVOS 16
+#define NUMBER_OF_ANGLE_SERVOS 14
+#define ANGLES 0
+#define ID_NUMBERS 1
+#define LEFT_MOTOR 15
+#define RIGHT_MOTOR 16
 
-struct orientationVals {
-  int accelX;
-  int accelY;
-  int accelZ;
-  int temp;
-  int gyroX;
-  int gyroY;
-  int gyroZ;
-};
 class Balance
 {
   private:
@@ -45,7 +37,7 @@ class Balance
     double iVal;
     double dVal;
     //desired value
-    int setpoint;
+    float setpoint;
     //output
     double outVal;
     //time keeping
@@ -54,24 +46,25 @@ class Balance
     int error;
     double errorSum; //for I term
   public:
-    Balance(double pInit, double iInit, double dInit, int desiredVal);
-    int UpdatePID(int sensorVal);
+    Balance(double pInit, double iInit, double dInit, float desiredVal);
+    int UpdatePID(float sensorVal);
     void SetPID(int pSet, int iSet, int dSet);
     void SetDesiredVal(int desiredVal);
-    void ServosInitialize();
+/*    void ServosInitialize();
     void SetFrame(int goalPosition[16]);
     void SetSpeeds(int goalSpeedL, int goalSpeedR);
+*/
 };
-class Sensor
+class ServoGroup
 {
   private:
-      int updatePeriod;
-      unsigned long lastTimeInstance;
-      orientationVals sensorVals;
+    int initialPositions[NUMBER_OF_ANGLE_SERVOS];
+    int idNumbers[NUMBER_OF_SERVOS];
   public:
-    Sensor(int updatePeriodSet);
-    void Connect();
-    void Update();
-    double GetPitchAngle();
+    ServoGroup(int initialFrame[2][NUMBER_OF_SERVOS]);
+    void ServosInitialize();
+    void SetAngles(int goalPosition[2][NUMBER_OF_SERVOS]);
+    void SetSpeeds(int goalSpeedL, int goalSpeedR);
+    //void SetRideHeight(int height);
 };
 #endif
