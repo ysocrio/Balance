@@ -28,6 +28,10 @@
 #define ID_NUMBERS 1
 #define LEFT_MOTOR 15
 #define RIGHT_MOTOR 16
+#define MAX_SPEED_CW 2047 //RANGE IS 1024-2047
+#define MAX_SPEED_CCW 1023 //RANGE IS 0-1024
+#define MAX_TORQUE  205 //max value is 1023, 1/5 is recomended for smooth movement
+#define STALL_TORQUE 1.5 //N*m 
 
 class Balance
 {

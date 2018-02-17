@@ -47,6 +47,7 @@ int Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so
   return int(outVal);
 };
 
+
 void Balance::SetPID(int pSet, int iSet, int dSet){
   pVal = pSet;
   iVal = iSet;
@@ -68,7 +69,6 @@ ServoGroup::ServoGroup(int initialFrame[2][NUMBER_OF_SERVOS])
   {
     idNumbers[idNum] = initialFrame[ID_NUMBERS][idNum];
   }
-  this->ServosInitialize();
 }
 
 //function that is called to initialize all the dynamexl motors
@@ -129,7 +129,10 @@ void ServoGroup::SetAngles(int goalPosition[2][NUMBER_OF_SERVOS])
   dxlAction();
 }
 
-//sets the speed of the two motors attached to the wheels
+//sets the "speed" of the two motors attached to the wheels
+//doesnt actually set speed, just the direction and proportional torque of the
+//maximum output
+//input must be +/-1023
 void ServoGroup::SetSpeeds(int goalSpeedL, int goalSpeedR){
   /***************************
   * AX Set Goal Speed http://learn.trossenrobotics.com/projects/181-arbotix-1-6-documentation.html
@@ -137,6 +140,26 @@ void ServoGroup::SetSpeeds(int goalSpeedL, int goalSpeedR){
   * Values from 1024-2047 rotate the servo clockwise with 1024 being stopped and 2047 being full speed
   * Essentially the 10nth bit becomes the direction control
   ****************************/
+  int newSpeedL = 0;
+  int newSpeedR = 0;
+  if(goalSpeedL > 0)
+  {
+    newSpeedL = goalSpeedL;
+  }
+  else
+  {
+    bitSet(newSpeedL,10); //the eleventh bit determines direction
+    newSpeedL = goalSpeedL|newSpeedL; //bit OR to scale the next 10 bits
+  }
+  if(goalSpeedR > 0)
+  {
+    newSpeedR = goalSpeedR;
+  }
+  else
+  {
+    bitSet(newSpeedL,10); //the eleventh bit determines direction
+    newSpeedR = goalSpeedR|newSpeedR; //bit OR to scale the next 10 bits
+  }
   dxlSetGoalSpeed(idNumbers[LEFT_MOTOR],goalSpeedL);
   dxlSetGoalSpeed(idNumbers[RIGHT_MOTOR],goalSpeedR);
   dxlAction();
