@@ -49,7 +49,7 @@ int Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so
 };
 
 // PID+N Stuff
-int Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so it is float/double in seconds
+int Balance::UpdatePIDN(float sensorVal) { //time is in millis, need to change so it is float/double in seconds
   //stuff that gets looped
   unsigned long previousTime = timeInstance;
   int previousError = error;
