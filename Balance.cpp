@@ -5,12 +5,13 @@
 Describe wiring layout here
 */
 
-Balance::Balance(double pInit, double iInit, double dInit, float desiredVal) {
+Balance::Balance(double pInit, double iInit, double dInit, double NInit, float desiredVal) {
   //initialize the object
   //tuningValues
   pVal = pInit;
   iVal = iInit;
   dVal = pInit;
+  NVal = NInit;
   //time
   timeInstance = 0;
   //error
@@ -42,11 +43,32 @@ int Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so
   //derivative term
   if (ellapsedTime != 0 && previousError != 0) {
     int derivE = errorChange / ellapsedTime;
-    outVal += derivE * dVal;
+    outVal += derivE * dVal * (NVal/(derivE + NVal));
   }
   return int(outVal);
 };
 
+// PID+N Stuff
+int Balance::UpdatePIDN(float sensorVal) { //time is in millis, need to change so it is float/double in seconds
+  //stuff that gets looped
+  unsigned long previousTime = timeInstance;
+  int previousError = error;
+  error = setpoint - sensorVal;
+  timeInstance = millis();
+  double ellapsedTime = double((timeInstance - previousTime)/1000);   //(change of time)
+  int errorChange = error - previousError;          //(change in error)
+  //proportional term
+  outVal = pVal * error;
+  //integral term
+  errorSum += ellapsedTime * error;
+  outVal += errorSum * iVal;
+  //derivative term
+  if (ellapsedTime != 0 && previousError != 0) {
+    int derivE = errorChange / ellapsedTime;
+    outVal += derivE * dVal;
+  }
+  return int(outVal);
+};
 
 void Balance::SetPID(int pSet, int iSet, int dSet){
   pVal = pSet;
