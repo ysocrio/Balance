@@ -40,6 +40,7 @@ class Balance
     double pVal;
     double iVal;
     double dVal;
+    double NVal;
     //desired value
     float setpoint;
     //output
@@ -50,8 +51,9 @@ class Balance
     int error;
     double errorSum; //for I term
   public:
-    Balance(double pInit, double iInit, double dInit, float desiredVal);
+    Balance(double pInit, double iInit, double dInit, double NInit, float desiredVal);
     int UpdatePID(float sensorVal);
+    int UpdatePIDN(float sensorVal);
     void SetPID(int pSet, int iSet, int dSet);
     void SetDesiredVal(int desiredVal);
 /*    void ServosInitialize();
