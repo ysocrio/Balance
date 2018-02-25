@@ -30,16 +30,16 @@
 #define RIGHT_MOTOR 16
 #define MAX_SPEED_CW 2047 //RANGE IS 1024-2047
 #define MAX_SPEED_CCW 1023 //RANGE IS 0-1024
-#define MAX_TORQUE  205 //max value is 1023, 1/5 is recomended for smooth movement
-#define STALL_TORQUE 1.5 //N*m 
+#define MAX_TORQUE  1023 //max value is 1023, 1/5 is recomended for smooth movement
+#define STALL_TORQUE 1.5 //N*m
 
 class Balance
 {
   private:
     //tuning variables
-    double pVal;
-    double iVal;
-    double dVal;
+    float pVal;
+    float iVal;
+    float dVal;
     //desired value
     float setpoint;
     //output
@@ -50,9 +50,9 @@ class Balance
     int error;
     double errorSum; //for I term
   public:
-    Balance(double pInit, double iInit, double dInit, float desiredVal);
+    Balance(float pInit, float iInit, float dInit, float desiredVal);
     int UpdatePID(float sensorVal);
-    void SetPID(int pSet, int iSet, int dSet);
+    void SetPID(float pSet, float iSet, float dSet);
     void SetDesiredVal(int desiredVal);
 /*    void ServosInitialize();
     void SetFrame(int goalPosition[16]);

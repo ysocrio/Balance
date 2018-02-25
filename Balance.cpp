@@ -5,7 +5,7 @@
 Describe wiring layout here
 */
 
-Balance::Balance(double pInit, double iInit, double dInit, float desiredVal) {
+Balance::Balance(float pInit, float iInit, float dInit, float desiredVal) {
   //initialize the object
   //tuningValues
   pVal = pInit;
@@ -48,7 +48,7 @@ int Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so
 };
 
 
-void Balance::SetPID(int pSet, int iSet, int dSet){
+void Balance::SetPID(float pSet, float iSet, float dSet){
   pVal = pSet;
   iVal = iSet;
   dVal = dSet;
@@ -148,8 +148,8 @@ void ServoGroup::SetSpeeds(int goalSpeedL, int goalSpeedR){
   }
   else
   {
+    newSpeedL = abs(goalSpeedL); //bit OR to scale the next 10 bits
     bitSet(newSpeedL,10); //the eleventh bit determines direction
-    newSpeedL = goalSpeedL|newSpeedL; //bit OR to scale the next 10 bits
   }
   if(goalSpeedR > 0)
   {
@@ -157,11 +157,11 @@ void ServoGroup::SetSpeeds(int goalSpeedL, int goalSpeedR){
   }
   else
   {
+    newSpeedR = abs(goalSpeedR); //bit OR to scale the next 10 bits
     bitSet(newSpeedL,10); //the eleventh bit determines direction
-    newSpeedR = goalSpeedR|newSpeedR; //bit OR to scale the next 10 bits
   }
-  dxlSetGoalSpeed(idNumbers[LEFT_MOTOR],goalSpeedL);
-  dxlSetGoalSpeed(idNumbers[RIGHT_MOTOR],goalSpeedR);
+  dxlSetGoalSpeed(idNumbers[LEFT_MOTOR-1],newSpeedL);
+  dxlSetGoalSpeed(idNumbers[RIGHT_MOTOR-1],newSpeedR);
   dxlAction();
 }
 
