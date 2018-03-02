@@ -49,6 +49,8 @@ class Balance
     //error
     int error;
     double errorSum; //for I term
+    int RideHeightAnglesAlpha[];
+    int RideHeightAnglesBeta[];
   public:
     Balance(float pInit, float iInit, float dInit, float desiredVal);
     int UpdatePID(float sensorVal);
