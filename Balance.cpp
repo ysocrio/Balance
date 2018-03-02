@@ -165,20 +165,29 @@ void ServoGroup::SetSpeeds(int goalSpeedL, int goalSpeedR){
   dxlAction();
 }
 
-/*
+// Highest to Lowest Ride Heights (Angles in Degrees)
+// e.g.	A=0		B=0		RH=0.194m
+//		A=-57	B=90	RH=0.140m
+RideHeightAnglesAlpha[] = [
+	0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15,
+		-16, -17, -18, -19, -20, -21, -22, -23, -24, -25, -26, -27, -28,
+		-29, -30, -31, -32, -33, -34, -35, -36, -37, -38, -39, -39, -40,
+		-41, -42, -43, -44, -45, -46, -47, -48, -49, -50, -51, -52, -53,
+		-54, -55, -56, -57
+];
+
+RideHeightAnglesBeta[] = [
+	0, 2, 3, 5, 7, 8, 10, 12, 13, 15, 17, 18, 20, 22, 23, 25, 26, 28,
+		30, 31, 33, 35, 36, 38, 40, 41, 43, 44, 46, 48, 49, 51, 52, 54,
+		56, 57, 59, 60, 62, 63, 64, 65, 67, 68, 70, 71, 73, 74, 76, 77,
+		79, 80, 82, 83, 85, 86, 88, 89, 90
+];
+
 void ServoGroup::SetRideHeight(int height)
 {
-int newServoAngles[NUMBER_OF_ANGLE_SERVOS];
-//copies over angles for all but legs
-for()
-{
-
+	// height is from 0 (Highest RH) to 59 (Lowest RH)
+	rightAlpha = dxlSetGoalPosition(11, RideHeightAnglesAlpha[height] * (512/150));		// Real servo (11) turns same way as theoretical
+	leftAlpha = dxlSetGoalPosition(12, -(RideHeightAnglesAlpha[height] * (512 / 150)));	// Real servo (12) turns opposite way
+	rightBeta = dxlSetGoalPosition(13, -(RideHeightAnglesBeta[height] * (512 / 150)));	// Real servo (13) turns opposite way
+	leftBeta = dxlSetGoalPosition(18, RideHeightAnglesBeta[height] * (512 / 150));		// Real servo (18) turns same way
 }
-//calculates angles for all leg joints
-for()
-{
-
-}
-this->SetAngles(newServoAngles);
-}
-*/
