@@ -61,6 +61,9 @@ void Balance::SetDesiredVal(int desiredVal){
 //A group of motors
 ServoGroup::ServoGroup(int initialFrame[2][NUMBER_OF_SERVOS])
 {
+  //initialize lastServo
+  lastServo = 0;
+  //format initialPositions and idNumbers
   for(int servoNum = 0; servoNum<NUMBER_OF_ANGLE_SERVOS; servoNum++)
   {
     initialPositions[servoNum]=initialFrame[ANGLES][servoNum];
@@ -115,17 +118,34 @@ void ServoGroup::ServosInitialize()
   }
 };
 
+  /***************************
+  * AX Position graphic http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
+  *   EXAMPLE: set servo #1 position to 512
+  *     dxlSetGoalPosition(1,512);
+  ****************************/
+
 //function that allows all motor positions (not wheel motors) to a specific orientation
 void ServoGroup::SetAngles(int goalPosition[2][NUMBER_OF_SERVOS])
 {
+  if(lastServo >= NUMBER_OF_SERVOS-2)
+  {
+    lastServo = 0;
+  }
+  //sets servo number "lastServo" to its given goal position
+  dxlSetGoalPosition(idNumbers[lastServo],goalPosition[0][lastServo]);
+  //move to next servo number
+  if(lastServo < NUMBER_OF_SERVOS-2)
+  {
+    lastServo++
+  }
+  //previous method set all servos every time function was called
+  //new method will set one servo every program cycle
+  //results in faster cycle time
+  /*
   for(int i = 0; i < NUMBER_OF_SERVOS-2; i++) {
-    /***************************
-    * AX Position graphic http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
-    *   EXAMPLE: set servo #1 position to 512
-    *     dxlSetGoalPosition(1,512);
-    ****************************/
     dxlSetGoalPosition(idNumbers[i],goalPosition[0][i]);
   }
+  */
   dxlAction();
 }
 
@@ -145,21 +165,33 @@ void ServoGroup::SetSpeeds(int goalSpeedL, int goalSpeedR){
   if(goalSpeedL > 0)
   {
     newSpeedL = goalSpeedL;
+    bitClear(newSpeedL,10);
   }
-  else
+  else if(goalSpeedL != 0)
   {
     newSpeedL = abs(goalSpeedL); //bit OR to scale the next 10 bits
     bitSet(newSpeedL,10); //the eleventh bit determines direction
   }
+  else
+  {
+    newSpeedL = 0;
+  }
+
   if(goalSpeedR > 0)
   {
     newSpeedR = goalSpeedR;
+    bitClear(newSpeedR,10);
+  }
+  else if(goalSpeedR != 0)
+  {
+    newSpeedR = abs(goalSpeedR); //bit OR to scale the next 10 bits
+    bitSet(newSpeedR,10); //the eleventh bit determines direction
   }
   else
   {
-    newSpeedR = abs(goalSpeedR); //bit OR to scale the next 10 bits
-    bitSet(newSpeedL,10); //the eleventh bit determines direction
+    newSpeedR = 0;
   }
+
   dxlSetGoalSpeed(idNumbers[LEFT_MOTOR-1],newSpeedL);
   dxlSetGoalSpeed(idNumbers[RIGHT_MOTOR-1],newSpeedR);
   dxlAction();

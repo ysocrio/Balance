@@ -49,6 +49,8 @@ class Balance
     //error
     int error;
     double errorSum; //for I term
+    //variable for set angles used to store value of servo that was last written to
+    int lastServo;
   public:
     Balance(float pInit, float iInit, float dInit, float desiredVal);
     int UpdatePID(float sensorVal);
