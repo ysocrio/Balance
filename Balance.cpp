@@ -80,13 +80,14 @@ void ServoGroup::ServosInitialize()
 
   //dxlSetTorqueEnable(SERVO_ID, 1); //sets torque enable
   //dxlInit(1000000); //starts dynamixel library at 1mbps
-  int maxTorque = 1024;
+  int maxTorque = 1023;
 
   for(int servoIndex = 0; servoIndex < NUMBER_OF_SERVOS; servoIndex++)
   {
     int idNum = idNumbers[servoIndex];
     int torqueMode = dxlGetTorqueEnable(idNum);
     int torqueMax = dxlGetStartupMaxTorque(idNum);
+    int torqueLimit = dxlGetTorqueLimit(idNum);
     //set the first 14 servos to angle mode
     if(servoIndex < NUMBER_OF_ANGLE_SERVOS)
     {
@@ -116,6 +117,7 @@ void ServoGroup::ServosInitialize()
       dxlSetStartupMaxTorque(idNum, maxTorque);
     }
   }
+  delay(1);
 };
 
   /***************************
@@ -127,6 +129,7 @@ void ServoGroup::ServosInitialize()
 //function that allows all motor positions (not wheel motors) to a specific orientation
 void ServoGroup::SetAngles(int goalPosition[2][NUMBER_OF_SERVOS])
 {
+  /*
   if(lastServo >= NUMBER_OF_SERVOS-2)
   {
     lastServo = 0;
@@ -136,16 +139,15 @@ void ServoGroup::SetAngles(int goalPosition[2][NUMBER_OF_SERVOS])
   //move to next servo number
   if(lastServo < NUMBER_OF_SERVOS-2)
   {
-    lastServo++
+    lastServo++;
   }
   //previous method set all servos every time function was called
   //new method will set one servo every program cycle
   //results in faster cycle time
-  /*
+  */
   for(int i = 0; i < NUMBER_OF_SERVOS-2; i++) {
     dxlSetGoalPosition(idNumbers[i],goalPosition[0][i]);
   }
-  */
   dxlAction();
 }
 

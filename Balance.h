@@ -49,8 +49,6 @@ class Balance
     //error
     int error;
     double errorSum; //for I term
-    //variable for set angles used to store value of servo that was last written to
-    int lastServo;
   public:
     Balance(float pInit, float iInit, float dInit, float desiredVal);
     int UpdatePID(float sensorVal);
@@ -66,6 +64,8 @@ class ServoGroup
   private:
     int initialPositions[NUMBER_OF_ANGLE_SERVOS];
     int idNumbers[NUMBER_OF_SERVOS];
+    //variable for set angles used to store value of servo that was last written to
+    int lastServo;
   public:
     ServoGroup(int initialFrame[2][NUMBER_OF_SERVOS]);
     void ServosInitialize();
