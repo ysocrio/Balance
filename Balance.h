@@ -37,22 +37,25 @@ class Balance
 {
   private:
     //tuning variables
+    float kVal;
     float pVal;
     float iVal;
     float dVal;
     //desired value
     float setpoint;
     //output
-    double outVal;
+    float outVal;
     //time keeping
     unsigned long timeInstance;
+    unsigned long previousTime;
+    bool firstTime;
     //error
-    int error;
-    double errorSum; //for I term
+    float error;
+    float errorSum; //for I term
   public:
-    Balance(float pInit, float iInit, float dInit, float desiredVal);
-    int UpdatePID(float sensorVal);
-    void SetPID(float pSet, float iSet, float dSet);
+    Balance(float kInit, float pInit, float iInit, float dInit, float desiredVal);
+    double UpdatePID(float sensorVal);
+    void SetPID(float kSet, float pSet, float iSet, float dSet);
     void SetDesiredVal(int desiredVal);
 /*    void ServosInitialize();
     void SetFrame(int goalPosition[16]);
@@ -69,6 +72,7 @@ class ServoGroup
   public:
     ServoGroup(int initialFrame[2][NUMBER_OF_SERVOS]);
     void ServosInitialize();
+    void SetAnglesAll(int goalPosition[2][NUMBER_OF_SERVOS]);
     void SetAngles(int goalPosition[2][NUMBER_OF_SERVOS]);
     void SetSpeeds(int goalSpeedL, int goalSpeedR);
     //void SetRideHeight(int height);

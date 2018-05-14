@@ -5,14 +5,17 @@
 Describe wiring layout here
 */
 
-Balance::Balance(float pInit, float iInit, float dInit, float desiredVal) {
+Balance::Balance(float kInit, float pInit, float iInit, float dInit, float desiredVal) {
   //initialize the object
   //tuningValues
+  kVal = kInit;
   pVal = pInit;
   iVal = iInit;
-  dVal = pInit;
+  dVal = dInit;
   //time
   timeInstance = 0;
+  previousTime = 0;
+  firstTime = true;
   //error
   error = 0;
   errorSum = 0;
@@ -26,29 +29,38 @@ Balance::Balance(float pInit, float iInit, float dInit, float desiredVal) {
 3.after these two make sure data types agree
 
 */
-int Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so it is float/double in seconds
+double Balance::UpdatePID(float sensorVal) { //time is in millis, need to change so it is float/double in seconds
   //stuff that gets looped
-  unsigned long previousTime = timeInstance;
-  int previousError = error;
-  error = setpoint - sensorVal;
-  timeInstance = millis();
-  double ellapsedTime = double((timeInstance - previousTime)/1000);   //(change of time)
-  int errorChange = error - previousError;          //(change in error)
-  //proportional term
-  outVal = pVal * error;
-  //integral term
-  errorSum += ellapsedTime * error;
-  outVal += errorSum * iVal;
-  //derivative term
-  if (ellapsedTime != 0 && previousError != 0) {
-    int derivE = errorChange / ellapsedTime;
+//FIX I KICK (due to )
+
+  timeInstance = micros();
+  float elapsedTime = float(timeInstance - previousTime)/1000000;   //(change of time)
+  if (elapsedTime != 0)
+  {
+    float previousError = error;
+    error = setpoint - sensorVal;
+    float errorChange = error - previousError;          //(change in error)
+    //proportional term
+    outVal = pVal * error;
+    //integral term
+    if(firstTime){
+      //gets rid of first time kick due to I value
+      elapsedTime = 0;
+      firstTime=false;
+    }
+    errorSum += elapsedTime * error;
+    outVal += errorSum * iVal;
+    //derivative term
+    float derivE = errorChange / elapsedTime;
     outVal += derivE * dVal;
   }
-  return int(outVal);
+  previousTime = timeInstance;
+  return float(outVal*kVal);
 };
 
 
-void Balance::SetPID(float pSet, float iSet, float dSet){
+void Balance::SetPID(float kSet, float pSet, float iSet, float dSet){
+  kVal = kSet;
   pVal = pSet;
   iVal = iSet;
   dVal = dSet;
@@ -117,7 +129,6 @@ void ServoGroup::ServosInitialize()
       dxlSetStartupMaxTorque(idNum, maxTorque);
     }
   }
-  delay(1);
 };
 
   /***************************
@@ -126,30 +137,30 @@ void ServoGroup::ServosInitialize()
   *     dxlSetGoalPosition(1,512);
   ****************************/
 
-//function that allows all motor positions (not wheel motors) to a specific orientation
-void ServoGroup::SetAngles(int goalPosition[2][NUMBER_OF_SERVOS])
-{
-  /*
-  if(lastServo >= NUMBER_OF_SERVOS-2)
+  //function that allows all motor positions (not wheel motors) to a specific orientation
+  void ServoGroup::SetAnglesAll(int goalPosition[2][NUMBER_OF_SERVOS])
   {
-    lastServo = 0;
+    for(int i = 0; i < NUMBER_OF_SERVOS-2; i++) {
+      dxlSetGoalPosition(idNumbers[i],goalPosition[0][i]);
+    }
+    dxlAction();
   }
-  //sets servo number "lastServo" to its given goal position
-  dxlSetGoalPosition(idNumbers[lastServo],goalPosition[0][lastServo]);
-  //move to next servo number
-  if(lastServo < NUMBER_OF_SERVOS-2)
+
+  //function that allows all motor positions (not wheel motors) to a specific orientation
+  void ServoGroup::SetAngles(int goalPosition[2][NUMBER_OF_SERVOS])
   {
-    lastServo++;
+    if(lastServo >= NUMBER_OF_SERVOS-2)
+    {
+      lastServo = 0;
+    }
+    //sets servo number "lastServo" to its given goal position
+    dxlSetGoalPosition(idNumbers[lastServo],goalPosition[0][lastServo]);
+    //move to next servo number
+    if(lastServo < NUMBER_OF_SERVOS-2)
+    {
+      lastServo++;
+    }
   }
-  //previous method set all servos every time function was called
-  //new method will set one servo every program cycle
-  //results in faster cycle time
-  */
-  for(int i = 0; i < NUMBER_OF_SERVOS-2; i++) {
-    dxlSetGoalPosition(idNumbers[i],goalPosition[0][i]);
-  }
-  dxlAction();
-}
 
 //sets the "speed" of the two motors attached to the wheels
 //doesnt actually set speed, just the direction and proportional torque of the
