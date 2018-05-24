@@ -56,6 +56,7 @@ class Balance
     Balance(float kInit, float pInit, float iInit, float dInit, float desiredVal);
     double UpdatePID(float sensorVal);
     void SetPID(float kSet, float pSet, float iSet, float dSet);
+    void SetPIDLive(float kSet, float pSet, float iSet, float dSet);
     void SetDesiredVal(int desiredVal);
 /*    void ServosInitialize();
     void SetFrame(int goalPosition[16]);

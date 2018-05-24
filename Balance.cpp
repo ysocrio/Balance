@@ -65,6 +65,19 @@ void Balance::SetPID(float kSet, float pSet, float iSet, float dSet){
   iVal = iSet;
   dVal = dSet;
 };
+void Balance::SetPIDLive(float kSet, float pSet, float iSet, float dSet){
+  kVal = kSet;
+  pVal = pSet;
+  iVal = iSet;
+  dVal = dSet;
+  //time
+  timeInstance = 0;
+  previousTime = 0;
+  firstTime = true;
+  //error
+  error = 0;
+  errorSum = 0;
+};
 
 void Balance::SetDesiredVal(int desiredVal){
   setpoint = desiredVal;
